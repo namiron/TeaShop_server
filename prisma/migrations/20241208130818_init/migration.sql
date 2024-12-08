@@ -3,7 +3,7 @@ CREATE TYPE "EnumOrderStatus" AS ENUM ('PENDING', 'PAYED');
 
 -- CreateTable
 CREATE TABLE "user" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "email" TEXT NOT NULL,
@@ -16,93 +16,93 @@ CREATE TABLE "user" (
 
 -- CreateTable
 CREATE TABLE "store" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
-    "user_id" INTEGER,
+    "user_id" TEXT,
 
     CONSTRAINT "store_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "product" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "images" TEXT[],
-    "user_id" INTEGER,
-    "store_id" INTEGER,
-    "category_id" INTEGER,
-    "color_id" INTEGER,
+    "user_id" TEXT,
+    "store_id" TEXT,
+    "category_id" TEXT,
+    "color_id" TEXT,
 
     CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "category" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "store_id" INTEGER,
+    "store_id" TEXT,
 
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "color" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
     "value" TEXT NOT NULL,
-    "store_id" INTEGER,
+    "store_id" TEXT,
 
     CONSTRAINT "color_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "review" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "text" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
-    "user_id" INTEGER,
-    "product_id" INTEGER,
-    "store_id" INTEGER,
+    "user_id" TEXT,
+    "product_id" TEXT,
+    "store_id" TEXT,
 
     CONSTRAINT "review_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "order" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "status" "EnumOrderStatus" NOT NULL DEFAULT 'PENDING',
     "total" INTEGER NOT NULL,
-    "user_id" INTEGER,
+    "user_id" TEXT,
 
     CONSTRAINT "order_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "order_item" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" INTEGER NOT NULL,
-    "order_id" INTEGER,
-    "product_id" INTEGER,
-    "store_id" INTEGER,
+    "order_id" TEXT,
+    "product_id" TEXT,
+    "store_id" TEXT,
 
     CONSTRAINT "order_item_pkey" PRIMARY KEY ("id")
 );
