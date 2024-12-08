@@ -1,18 +1,16 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")   
 }
 
-
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   email     String   @unique
   password  String?
@@ -21,44 +19,37 @@ model User {
   picture   String   @default("/uploads/userImage.png")
 
   stores     Store[] 
-
-  favorites Product[]
-
-  reviews   Review[]
-
+  favorites  Product[]
+  reviews    Review[]
   orders     Order[]
 
   @@map("user")
 }
 
 model Store {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   title       String
   description String?
 
   user        User?   @relation(fields: [userId], references: [id])
-  userId      String? @db.ObjectId @map("user_id")
+  userId      Int?    @map("user_id")
   
   colors      Color[]
-
   products    Product[]
-
   category    Category[]  
-
   reviews     Review[]
-
   orderItems  OrderItem[]
 
   @@map("store")
 }
 
 model Product {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   title       String
   description String  
@@ -67,28 +58,27 @@ model Product {
   images      String[]
 
   reviews     Review[]
-
   orderItems  OrderItem[]
 
   user        User? @relation(fields: [userId], references: [id])
-  userId      String? @map("user_id") @db.ObjectId
+  userId      Int?  @map("user_id")
 
   store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String? @map("store_id") @db.ObjectId
+  storeId     Int?  @map("store_id")
 
   category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  String? @map("category_id") @db.ObjectId
+  categoryId  Int?  @map("category_id")
 
   color       Color? @relation(fields: [colorId], references: [id])
-  colorId     String? @map("color_id") @db.ObjectId
+  colorId     Int?  @map("color_id")
 
   @@map("product")
 }
 
 model Category {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   title       String
   description String  
@@ -96,79 +86,78 @@ model Category {
   products    Product[]
 
   store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String? @map("store_id") @db.ObjectId
+  storeId     Int?   @map("store_id")
 
   @@map("category")
 }
 
 model Color {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  name       String
-  value      String  
+  name        String
+  value       String  
 
   products    Product[]
 
   store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String? @map("store_id") @db.ObjectId
+  storeId     Int?   @map("store_id")
 
   @@map("color")
 }
 
 model Review {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   text        String
   rating      Int
 
   user        User? @relation(fields: [userId], references: [id])
-  userId      String? @map("user_id") @db.ObjectId
+  userId      Int?  @map("user_id")
 
   product     Product? @relation(fields: [productId], references: [id])
-  productId   String? @map("product_id") @db.ObjectId
+  productId   Int?  @map("product_id")
 
   store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String? @map("store_id") @db.ObjectId
+  storeId     Int?  @map("store_id")
 
   @@map("review")
 }
 
 model Order {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   status      EnumOrderStatus @default(PENDING)
-
   items       OrderItem[]
   total       Int
 
   user        User? @relation(fields: [userId], references: [id])
-  userId      String? @map("user_id") @db.ObjectId
-  
+  userId      Int?  @map("user_id")
+
   @@map("order")
 }
 
 model OrderItem {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())  // Используем Int вместо ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   quantity    Int
   price       Int
 
   order       Order? @relation(fields: [orderId], references: [id])
-  orderId     String? @map("order_id") @db.ObjectId
+  orderId     Int?   @map("order_id")
 
   product     Product? @relation(fields: [productId], references: [id])
-  productId   String? @map("product_id") @db.ObjectId
+  productId   Int?   @map("product_id")
 
   store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String? @map("store_id") @db.ObjectId
+  storeId     Int?   @map("store_id")
 
   @@map("order_item")
 }
