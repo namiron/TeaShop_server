@@ -3,56 +3,52 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")   
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String      @id @default(cuid())   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
-  email     String   @unique
+  email     String      @unique
   password  String?
 
-  name      String   @default("No name")
-  picture   String   @default("/uploads/userImage.png")
+  name      String      @default("No name")
+  picture   String      @default("/uploads/userImage.png")
 
-  stores     Store[] 
+  stores     Store[]
   favorites  Product[]
   reviews    Review[]
   orders     Order[]
-
-  @@map("user")
 }
 
 model Store {
-  id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   title       String
   description String?
 
-  user        User?   @relation(fields: [userId], references: [id])
-  userId      String?    @map("user_id")
-  
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?  @db.ObjectId
+
   colors      Color[]
   products    Product[]
-  category    Category[]  
+  category    Category[]
   reviews     Review[]
   orderItems  OrderItem[]
-
-  @@map("store")
 }
 
 model Product {
-  id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   title       String
-  description String  
+  description String
 
   price       Int
   images      String[]
@@ -60,75 +56,67 @@ model Product {
   reviews     Review[]
   orderItems  OrderItem[]
 
-  user        User? @relation(fields: [userId], references: [id])
-  userId      String?  @map("user_id")
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?  @db.ObjectId
 
-  store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String?  @map("store_id")
+  store       Store?   @relation(fields: [storeId], references: [id])
+  storeId     String?  @db.ObjectId
 
   category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  String?  @map("category_id")
+  categoryId  String?  @db.ObjectId
 
-  color       Color? @relation(fields: [colorId], references: [id])
-  colorId     String?  @map("color_id")
-
-  @@map("product")
+  color       Color?   @relation(fields: [colorId], references: [id])
+  colorId     String?  @db.ObjectId
 }
 
 model Category {
-  id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   title       String
-  description String  
+  description String
 
   products    Product[]
 
-  store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String?   @map("store_id")
-
-  @@map("category")
+  store       Store?   @relation(fields: [storeId], references: [id])
+  storeId     String?  @db.ObjectId
 }
 
 model Color {
-id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   name        String
-  value       String  
+  value       String
 
   products    Product[]
 
-  store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String?   @map("store_id")
-
-  @@map("color")
+  store       Store?   @relation(fields: [storeId], references: [id])
+  storeId     String?  @db.ObjectId
 }
 
 model Review {
-  id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   text        String
   rating      Int
 
-  user        User? @relation(fields: [userId], references: [id])
-  userId      String?  @map("user_id")
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?  @db.ObjectId
 
   product     Product? @relation(fields: [productId], references: [id])
-  productId   String?  @map("product_id")
+  productId   String?  @db.ObjectId
 
-  store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String?  @map("store_id")
-
-  @@map("review")
+  store       Store?   @relation(fields: [storeId], references: [id])
+  storeId     String?  @db.ObjectId
 }
 
 model Order {
-  id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -136,30 +124,26 @@ model Order {
   items       OrderItem[]
   total       Int
 
-  user        User? @relation(fields: [userId], references: [id])
-  userId      String?  @map("user_id")
-
-  @@map("order")
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?  @db.ObjectId
 }
 
 model OrderItem {
-  id          String   @id @default(cuid())  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   quantity    Int
   price       Int
 
-  order       Order? @relation(fields: [orderId], references: [id])
-  orderId    String?   @map("order_id")
+  order       Order?   @relation(fields: [orderId], references: [id])
+  orderId     String?  @db.ObjectId
 
   product     Product? @relation(fields: [productId], references: [id])
-  productId   String?   @map("product_id")
+  productId   String?  @db.ObjectId
 
-  store       Store? @relation(fields: [storeId], references: [id])
-  storeId     String?   @map("store_id")
-
-  @@map("order_item")
+  store       Store?   @relation(fields: [storeId], references: [id])
+  storeId     String?  @db.ObjectId
 }
 
 enum EnumOrderStatus {
